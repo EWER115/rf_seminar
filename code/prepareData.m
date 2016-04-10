@@ -2,13 +2,12 @@
 dir = 'C:/Users/Dejan Štepec/Desktop/images';
 datalibsvm='../datalibsvm';
 n_train = 8;
-scales = [1 5 10];
-scale_min_max = [1, 10];
+scales = [1 4 7 10 13 16 20 23 26 30];
+scale_min_max = [1, 30];
 %% PREPARE IMAGES
 
 % Divide dataset to train and test set
 image_paths = scan_directory(dir);
-image_paths(11:end) = [];
 [train_paths, idx] = datasample(image_paths, n_train, 'Replace', false);
 image_paths(idx) = [];
 test_paths = image_paths;
