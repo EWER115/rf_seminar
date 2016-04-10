@@ -1,5 +1,6 @@
 %% PARAMETERS
-dir = 'C:/Users/Dejan Štepec/Desktop/images';
+pp = parpool(4);
+dir = '../images';
 datalibsvm='../datalibsvm';
 n_train = 1000;
 scales = [1 4 7 10 13 16 20 23 26 30];
@@ -54,10 +55,12 @@ featuresTrain  = cell(1, numel(scales));
 for scale = 1:numel(scales)
    n = round((scales(scale) / 100) * width);
    f = zeros(n_train, 48);
-   for i = 1:n_train
+   tic
+   parfor i = 1:n_train
        f(i,:) = compute_features(seam_carving(train_images{i}, n));
        disp(['Scale[train]: ', int2str(scales(scale)), ' iteration:', int2str(i)]);
    end
+   toc
    featuresTrain{scale} = f;
    disp(['Finished scale[train]: ', int2str(scales(scale))]);
 end
@@ -71,7 +74,7 @@ featuresTest  = cell(1, numel(scales));
 for scale = 1:numel(scales)
    n = round((scales(scale) / 100) * width);
    f = zeros(numel(test_images), 48);
-   for i = 1:numel(test_images)
+   parfor i = 1:numel(test_images)
        f(i,:) = compute_features(seam_carving(test_images{i}, n));
        disp(['Scale[test]: ', int2str(scales(scale)), ' iteration:', int2str(i)]);
    end
@@ -124,7 +127,8 @@ libsvmwrite(strcat(datalibsvm, '/test_features_random.lsvm'), ones(numel(test_im
 % Save image paths used for train and test dataset
 % image_test_paths.dat
 % image_train_paths.dat
-writetable(cell2table(train_paths', 'VariableNames', {'Path'}), strcat(data, '/image_train_paths.dat'));
-writetable(cell2table(test_paths', 'VariableNames', {'Path'}), strcat(data, '/image_test_paths.dat'));
+writetable(cell2table(train_paths', 'VariableNames', {'Path'}), strcat(datalibsvm, '/image_train_paths.dat'));
+writetable(cell2table(test_paths', 'VariableNames', {'Path'}), strcat(datalibsvm, '/image_test_paths.dat'));
 
 disp('Finished writing data in libsvm format!');
+delete(pp);
