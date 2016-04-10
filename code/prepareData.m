@@ -1,6 +1,7 @@
 %% PARAMETERS
 dir = '../images';
 data = '../data';
+datalibsvm='../datalibsvm';
 n_train = 1000;
 scales = [1 4 7 10 13 16 20 23 26 30];
 scale_min_max = [1, 30];
@@ -117,7 +118,7 @@ end
 % Save test features with RANDOM scales, save also scales used
 % test_features_random.dat
 % [scales ; labels ; features]
-csvwrite(strcat(data, '/test_features_random.dat'), [random_scales',zeros(numel(test_images), 1),featuresTestRandom]);
+csvwrite(strcat(data, '/test_features_random.dat'), [random_scales',ones(numel(test_images), 1),featuresTestRandom]);
 
 % Save image paths used for train and test dataset
 % image_test_paths.dat
@@ -126,3 +127,39 @@ writetable(cell2table(train_paths', 'VariableNames', {'Path'}), strcat(data, '/i
 writetable(cell2table(test_paths', 'VariableNames', {'Path'}), strcat(data, '/image_test_paths.dat'));
 
 disp('Finished writing data!');
+
+%% SAVING RESULTS LIBSVM format
+if exist(datalibsvm, 'dir')
+    rmdir(datalibsvm,'s');
+end
+mkdir(datalibsvm);
+
+% Save original train and test features [labels ; features]
+% train_features_original.lsvm
+% test_features_original.lsvm
+libsvmwrite(strcat(datalibsvm, '/train_features_original.lsvm'),zeros(n_train, 1),featuresOriginalTrain);
+libsvmwrite(strcat(datalibsvm, '/test_features_original.lsvm'),zeros(numel(test_images), 1),featuresOriginalTest);
+
+% Save train and test features (each scale separately): 
+% train_<scale>.dat and test_<scale>.lsvm
+% [labels ; features]
+mask_train = strcat(datalibsvm, '/train_%04d.lsvm');
+mask_test = strcat(datalibsvm, '/test_%04d.lsvm');
+
+for i = 1:numel(scales)
+    libsvmwrite(sprintf(mask_train, scales(i)), ones(n_train, 1),featuresTrain{i});
+    libsvmwrite(sprintf(mask_test, scales(i)), ones(numel(test_images), 1),featuresTest{i});
+end
+
+% Save test features with RANDOM scales, save also scales used
+% test_features_random.dat
+% [scales ; labels ; features]
+libsvmwrite(strcat(datalibsvm, '/test_features_random.lsvm'), ones(numel(test_images), 1),featuresTestRandom);
+
+% Save image paths used for train and test dataset
+% image_test_paths.dat
+% image_train_paths.dat
+writetable(cell2table(train_paths', 'VariableNames', {'Path'}), strcat(data, '/image_train_paths.dat'));
+writetable(cell2table(test_paths', 'VariableNames', {'Path'}), strcat(data, '/image_test_paths.dat'));
+
+disp('Finished writing data in libsvm format!');
