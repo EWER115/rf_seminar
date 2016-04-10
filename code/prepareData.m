@@ -1,5 +1,5 @@
 %% PARAMETERS
-dir = 'C:/Users/Dejan Štepec/Desktop/images';
+dir = '../images';
 data = '../data';
 datalibsvm='../datalibsvm';
 n_train = 1000;
@@ -120,7 +120,7 @@ end
 % Save test features with RANDOM scales, save also scales used
 % test_features_random.dat
 % [scales, labels, features]
-csvwrite(strcat(data, '/test_features_random.dat'), [random_scales',zeros(numel(test_images), 1),featuresTestRandom]);
+csvwrite(strcat(data, '/test_features_random.dat'), [random_scales',ones(numel(test_images), 1),featuresTestRandom]);
 
 % Save image paths used for train and test dataset
 % image_test_paths.dat
