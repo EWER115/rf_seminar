@@ -1,7 +1,7 @@
 %% PARAMETERS
 dir = 'C:/Users/Dejan Štepec/Desktop/images';
 datalibsvm='../datalibsvm';
-n_train = 8;
+n_train = 1000;
 scales = [1 4 7 10 13 16 20 23 26 30];
 scale_min_max = [1, 30];
 %% PREPARE IMAGES
