@@ -1,5 +1,5 @@
 %% PARAMETERS
-dir = '../images';
+dir = 'C:/Users/Dejan Štepec/Desktop/images';
 data = '../data';
 datalibsvm='../datalibsvm';
 n_train = 1000;
@@ -57,6 +57,7 @@ for scale = 1:numel(scales)
    f = zeros(n_train, 48);
    for i = 1:n_train
        f(i,:) = compute_features(seam_carving(train_images{i}, n));
+       disp(['Scale[train]: ', int2str(scales(scale)), 'iteration:', int2str(i)]);
    end
    featuresTrain{scale} = f;
    disp(['Finished scale[train]: ', int2str(scales(scale))]);
@@ -73,6 +74,7 @@ for scale = 1:numel(scales)
    f = zeros(numel(test_images), 48);
    for i = 1:numel(test_images)
        f(i,:) = compute_features(seam_carving(test_images{i}, n));
+       disp(['Scale[test]: ', int2str(scales(scale)), 'iteration:', int2str(i)]);
    end
    featuresTest{scale} = f;
    disp(['Finished scale[test]: ', int2str(scales(scale))]);
@@ -98,7 +100,7 @@ if exist(data, 'dir')
 end
 mkdir(data);
 
-% Save original train and test features [labels ; features]
+% Save original train and test features [labels, features]
 % train_features_original.dat
 % test_features_original.dat
 csvwrite(strcat(data, '/train_features_original.dat'), [zeros(n_train, 1),featuresOriginalTrain]);
@@ -106,7 +108,7 @@ csvwrite(strcat(data, '/test_features_original.dat'), [zeros(numel(test_images),
 
 % Save train and test features (each scale separately): 
 % train_<scale>.dat and test_<scale>.dat 
-% [labels ; features]
+% [labels, features]
 mask_train = strcat(data, '/train_%04d.dat');
 mask_test = strcat(data, '/test_%04d.dat');
 
@@ -117,8 +119,8 @@ end
 
 % Save test features with RANDOM scales, save also scales used
 % test_features_random.dat
-% [scales ; labels ; features]
-csvwrite(strcat(data, '/test_features_random.dat'), [random_scales',ones(numel(test_images), 1),featuresTestRandom]);
+% [scales, labels, features]
+csvwrite(strcat(data, '/test_features_random.dat'), [random_scales',zeros(numel(test_images), 1),featuresTestRandom]);
 
 % Save image paths used for train and test dataset
 % image_test_paths.dat
