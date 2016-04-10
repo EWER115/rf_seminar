@@ -1,6 +1,6 @@
 function [train_scales, test_scales] = loadTrainTestScales(dir)
-    mask_train = strcat(data, 'train_%04d.dat');
-    mask_test = strcat(data, 'test_%04d.dat');
+    mask_train = 'train_%04d.dat';
+    mask_test = 'test_%04d.dat';
     
     train_scales = cell(0);
     test_scales = cell(0);

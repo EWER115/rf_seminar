@@ -58,7 +58,7 @@ for scale = 1:numel(scales)
        f(i,:) = compute_features(seam_carving(train_images{i}, n));
    end
    featuresTrain{scale} = f;
-   disp(['Finished scale[train]: ', scales(scale)]);
+   disp(['Finished scale[train]: ', int2str(scales(scale))]);
 end
 
 disp('Finished computing TRAIN features for all scales!');
@@ -74,7 +74,7 @@ for scale = 1:numel(scales)
        f(i,:) = compute_features(seam_carving(test_images{i}, n));
    end
    featuresTest{scale} = f;
-   disp(['Finished scale[test]: ', scales(scale)]);
+   disp(['Finished scale[test]: ', int2str(scales(scale))]);
 end
 
 disp('Finished computing TEST features for all scales!');
@@ -86,20 +86,22 @@ random_scales = randi(scale_min_max, 1, numel(test_images));
 for i = 1:numel(test_images)
      n = round((random_scales(i) / 100) * width);
      featuresTestRandom(i,:) = compute_features(seam_carving(test_images{i}, n));
-     disp(['Finished scale[test-random]: ', i]);
+     disp(['Finished scale[test-random]: ', int2str(i)]);
 end
 
 disp('Finished computing TEST features for all RANDOM scales!');
 
 %% SAVING RESULTS
-rmdir(data,'s');
+if exist(data, 'dir')
+    rmdir(data,'s');
+end
 mkdir(data);
 
 % Save original train and test features [labels ; features]
 % train_features_original.dat
 % test_features_original.dat
-csvwrite(strcat(data, '/train_features_original.dat'), [zeros(n_train, 1);featuresOriginalTrain]);
-csvwrite(strcat(data, '/test_features_original.dat'), [zeros(numel(test_images), 1);featuresOriginalTest]);
+csvwrite(strcat(data, '/train_features_original.dat'), [zeros(n_train, 1),featuresOriginalTrain]);
+csvwrite(strcat(data, '/test_features_original.dat'), [zeros(numel(test_images), 1),featuresOriginalTest]);
 
 % Save train and test features (each scale separately): 
 % train_<scale>.dat and test_<scale>.dat 
@@ -108,14 +110,14 @@ mask_train = strcat(data, '/train_%04d.dat');
 mask_test = strcat(data, '/test_%04d.dat');
 
 for i = 1:numel(scales)
-    csvwrite(sprintf(mask_train, scales(i), [ones(n_train, 1);featuresTrain{i}]));
-    csvwrite(sprintf(mask_test, scales(i), [ones(numels(test_images), 1);featuresTest{i}]));
+    csvwrite(sprintf(mask_train, scales(i)), [ones(n_train, 1),featuresTrain{i}]);
+    csvwrite(sprintf(mask_test, scales(i)), [ones(numel(test_images), 1),featuresTest{i}]);
 end
 
 % Save test features with RANDOM scales, save also scales used
 % test_features_random.dat
 % [scales ; labels ; features]
-csvwrite(strcat(data, '/test_features_random.dat'), [random_scales';zeros(numel(test_images), 1);featuresTestRandom]);
+csvwrite(strcat(data, '/test_features_random.dat'), [random_scales',zeros(numel(test_images), 1),featuresTestRandom]);
 
 % Save image paths used for train and test dataset
 % image_test_paths.dat
