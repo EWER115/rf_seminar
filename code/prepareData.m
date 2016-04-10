@@ -1,6 +1,6 @@
 %% PARAMETERS
 pp = parpool(4);
-dir = '../images';
+dir = 'C:/Users/Dejan Štepec/Desktop/images';
 datalibsvm='../datalibsvm';
 n_train = 1000;
 scales = [1 4 7 10 13 16 20 23 26 30];
@@ -17,11 +17,11 @@ test_paths = image_paths;
 train_images = cell(size(train_paths));
 test_images = cell(size(test_paths));
 
-for i = 1:n_train
+parfor i = 1:n_train
    train_images{i} = imread(train_paths{i}); 
 end
 
-for i = 1:numel(test_images)
+parfor i = 1:numel(test_images)
    test_images{i} = imread(test_paths{i}); 
 end
 
@@ -32,7 +32,7 @@ disp('Finished reading images!');
 % Compute features for original TRAIN images
 featuresOriginalTrain = zeros(n_train, 48);
 
-for i = 1:n_train
+parfor i = 1:n_train
    featuresOriginalTrain(i,:) = compute_features(train_images{i}); 
 end
 
@@ -41,7 +41,7 @@ disp('Finished computing features on ORIGINAL train images!');
 % Compute features for original TEST images
 featuresOriginalTest = zeros(numel(test_images), 48);
 
-for i = 1:numel(test_images)
+parfor i = 1:numel(test_images)
    featuresOriginalTest(i,:) = compute_features(test_images{i}); 
 end
 
@@ -88,7 +88,7 @@ disp('Finished computing TEST features for all scales!');
 featuresTestRandom = zeros(numel(test_images), 48);
 random_scales = randi(scale_min_max, 1, numel(test_images));
 
-for i = 1:numel(test_images)
+parfor i = 1:numel(test_images)
      n = round((random_scales(i) / 100) * width);
      featuresTestRandom(i,:) = compute_features(seam_carving(test_images{i}, n));
      disp(['Finished scale[test-random]: ', int2str(i)]);
