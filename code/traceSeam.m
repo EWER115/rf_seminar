@@ -12,11 +12,11 @@ function [T] = traceSeam(C)
       end
       
       if idx == 1
-          T(i) = T(i+1) - 1;
+          T(i) = max(1, T(i+1) - 1);
       elseif idx == 2
           T(i) = T(i+1);
       else
-          T(i) = T(i+1)+1;
+          T(i) = min(size(C, 2), T(i+1)+1);
       end
     end
 end
