@@ -1,7 +1,0 @@
-*.tif
-*.jpg
-*.jpeg
-images/
-#datalibsvm/
-data/
-*.asv
