@@ -121,8 +121,10 @@ end
 
 % Save test features with RANDOM scales, save also scales used
 % test_features_random.dat
+% random_scales
 % [scales ; labels ; features]
 libsvmwrite(strcat(datalibsvm, '/test_features_random.lsvm'), ones(numel(test_images), 1),sparse(featuresTestRandom));
+csvwrite(strcat(datalibsvm, '/random_scales', random_scales));
 
 % Save image paths used for train and test dataset
 % image_test_paths.dat
