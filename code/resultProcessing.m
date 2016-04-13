@@ -51,7 +51,11 @@
 % xlabel('c'), ylabel('Accuracy'); title('Accuracy vs. cost');
 
 %% Test for each scale
-for i = 1 : length(test_scales)
-    model = svmtrain([train_labels_scales(:,i) ; train_labels_original], [train_scales{i} ; train_original]);
-    [lbl, acc, dec] = svmpredict(test_labels_scales(:,i),test_scales{i},model);
-end
+% for i = 1 : length(test_scales)
+%     model = svmtrain([train_labels_scales(:,i) ; train_labels_original], [train_scales{i} ; train_original]);
+%     [lbl, acc, dec] = svmpredict(test_labels_scales(:,i),test_scales{i},model);
+% end
+
+model = svmtrain([train_labels_scales(:,4) ; train_labels_original], [train_scales{4} ; train_original]);
+[labels, mtrx] = libsvmread('../images_object_removed/removed_objects_control.lsvm');
+[lbl, acc, dec] = svmpredict(labels,mtrx,model);
