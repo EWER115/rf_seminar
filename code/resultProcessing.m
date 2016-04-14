@@ -7,6 +7,16 @@
 [train_scales, train_labels_scales, test_scales, test_labels_scales] = ...
     loadTrainTestScales('../datalibsvm');
 
+%% Create new files that include original data and scaled data
+% mask = '../datalibsvm/train_mixed_%04d.lsvm';
+% scales = [1 4 7 10 13 16 20 23 26 30];
+% for i = 1 : length(test_scales)
+%     lbls = [train_labels_scales(1:500,i) ; train_labels_original(501:900)];
+%     mtrx = [train_scales{i}(1:500,:) ; train_original(501:900,:)];
+%     libsvmwrite(sprintf(mask, scales(i)), lbls, mtrx);
+% end
+
+
 %% Optimize parameters
 % % read training set for parameter optimization
 % [lvtrainOpt, trainOpt] = libsvmread('../datascaled/valid.lsvm');
@@ -51,11 +61,14 @@
 % xlabel('c'), ylabel('Accuracy'); title('Accuracy vs. cost');
 
 %% Test for each scale
-% for i = 1 : length(test_scales)
-%     model = svmtrain([train_labels_scales(:,i) ; train_labels_original], [train_scales{i} ; train_original]);
-%     [lbl, acc, dec] = svmpredict(test_labels_scales(:,i),test_scales{i},model);
-% end
+maskTrain = '../datascaled2/train_%04d.lsvm';
+maskTest = '../datascaled2/test_%04d.lsvm';
+scales = [1 4 7 10 13 16 20 23 26 30];
 
-model = svmtrain([train_labels_scales(:,4) ; train_labels_original], [train_scales{4} ; train_original]);
-[labels, mtrx] = libsvmread('../images_object_removed/removed_objects_control.lsvm');
-[lbl, acc, dec] = svmpredict(labels,mtrx,model);
+ for i = 1 : length(test_scales)
+    [labelsT, mtrxT] = libsvmread(sprintf(maskTrain, scales(i)));
+    model = svmtrain(labelsT,mtrxT);
+    [labels, mtrx] = libsvmread(sprintf(maskTest, scales(i)));
+    [lbl, acc, dec] = svmpredict(labels,mtrx,model);
+ end
+
