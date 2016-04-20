@@ -8,11 +8,11 @@
     loadTrainTestScales('../datalibsvm');
 
 %% Create new files that include original data and scaled data
-% mask = '../datalibsvm/train_mixed_%04d.lsvm';
+% mask = '../datalibsvm/test_mixed_%04d.lsvm';
 % scales = [1 4 7 10 13 16 20 23 26 30];
 % for i = 1 : length(test_scales)
-%     lbls = [train_labels_scales(1:500,i) ; train_labels_original(501:900)];
-%     mtrx = [train_scales{i}(1:500,:) ; train_original(501:900,:)];
+%     lbls = [test_labels_scales(1:180,i) ; test_labels_original(181:end)];
+%     mtrx = [test_scales{i}(1:180,:) ; test_original(181:end,:)];
 %     libsvmwrite(sprintf(mask, scales(i)), lbls, mtrx);
 % end
 
