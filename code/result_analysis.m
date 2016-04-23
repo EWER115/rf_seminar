@@ -9,6 +9,8 @@ scales = [1 4 7 10 13 16 20 23 26 30];
 trueClass = zeros(338,length(scales));
 predClass = zeros(338,length(scales));
 
+accur = zeros(1,length(scales));
+
 % iterate through all scales
 for i = 1 : length(scales)
     [labelsT, mtrxT] = libsvmread(sprintf(maskTrain, scales(i)));
@@ -19,6 +21,7 @@ for i = 1 : length(scales)
     % store predictions
     trueClass(:,i) = labels;
     predClass(:,i) = dec;
+    accur(1,i) = acc(1);
 end
 
 % calculate ROC curve - smaller scales (up to 13%)
@@ -48,11 +51,14 @@ hold off;
 % % store trueClass and predClass
 % csvwrite('../results/trueClass_same.csv',trueClass);
 % csvwrite('../results/predClass_same.csv',predClass);
+csvwrite('../results/accur_same.csv',accur);
 
 %% Different scaling factors in train and random scaling in test data
 % prepare variables for ROC curve
 trueClass = zeros(338,length(scales));
 predClass = zeros(338,length(scales));
+
+accur = zeros(1,length(scales));
 
 % iterate through all scales
 for i = 1 : length(scales)
@@ -64,6 +70,7 @@ for i = 1 : length(scales)
     % store predictions
     trueClass(:,i) = labels;
     predClass(:,i) = dec;
+    accur(:,i) = acc(1);
 end
 
 % calculate ROC curve - smaller scales (up to 13%)
@@ -93,6 +100,7 @@ hold off;
 % % store trueClass and predClass
 % csvwrite('../results/trueClass_random_all.csv',trueClass);
 % csvwrite('../results/predClass_random_all.csv',predClass);
+csvwrite('../results/accur_random_all.csv',accur);
 
 %% Train on complete training set that consist of differently scaled images
 [labelsT, mtrxT] = libsvmread('../datascaled2/train_complete.lsvm');
@@ -112,3 +120,4 @@ hold off;
 % % store trueClass and predClass
 % csvwrite('../results/trueClass_complete.csv',lbl);
 % csvwrite('../results/predClass_complete.csv',dec);
+csvwrite('../results/accur_complete.csv',acc(1));
